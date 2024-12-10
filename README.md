@@ -37,4 +37,21 @@ A simple linux shell project.
 - [ ] ** History: Store previously run commands and allow the user to view them using a command like history. => vector of strings.
 - [ ] **Running Multiple Commands (;).
 
+### **8.Files Commands**
+- [ ] **  cat 
+- [ ] ** touch
+- [ ] ** rm
+- [ ] ** mv
+- [ ] ** cp
+- [ ] ** ls
+- [ ] ** stat
+- [ ] ** chmod
+- [ ] ** find
+- [ ] ** mkdir
+- [ ] ** rmdir
+- [ ] ** du
+- [ ] ** ln
+- [ ] ** df
+- [ ] ** 
+
 
