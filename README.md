@@ -19,6 +19,7 @@ A simple linux shell project.
 - [ ] **Exit command**: Implement a way to exit the shell (e.g., if the user types `exit`).
 - [ ] **Change directory (cd)**: Use `chdir()` to implement the `cd` command.
 - [ ] **Print working directory (pwd)**: Use `getcwd()` to implement the `pwd` command.
+- [ ] ** You can add your own custom commands (e.g., clear to clear the terminal).
 
 ### **5. Error Handling**
 - [ ] **Command not found**: Handle cases where the command does not exist.
@@ -31,3 +32,9 @@ A simple linux shell project.
 - [ ] **Redirection**: Implement input/output redirection (`>`, `<`) using `freopen()` or `dup2()`.
 - [ ] **Environment variables**: Allow access to environment variables using `getenv()` and `setenv()`.
 - [ ] **Prompt customization**: Customize the prompt to display user or directory info (e.g., `user@host:~$`).
+
+### **7.Nice to add**
+-[ ] ** History: Store previously run commands and allow the user to view them using a command like history. => vector of strings.
+-[ ] **Running Multiple Commands (;).
+
+
