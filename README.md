@@ -52,6 +52,5 @@ A simple linux shell project.
 - [ ] ** du
 - [ ] ** ln
 - [ ] ** df
-- [ ] ** 
 
 
