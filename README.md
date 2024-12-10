@@ -34,7 +34,7 @@ A simple linux shell project.
 - [ ] **Prompt customization**: Customize the prompt to display user or directory info (e.g., `user@host:~$`).
 
 ### **7.Nice to add**
--[ ] ** History: Store previously run commands and allow the user to view them using a command like history. => vector of strings.
--[ ] **Running Multiple Commands (;).
+- [ ] ** History: Store previously run commands and allow the user to view them using a command like history. => vector of strings.
+- [ ] **Running Multiple Commands (;).
 
 
