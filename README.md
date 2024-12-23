@@ -3,20 +3,20 @@ A simple linux shell project.
 
 # Todo:
 ## **1. Project Setup**
-- [ ] **Create a new C++ project**: Set up your project and include necessary libraries (`<iostream>`, `<string>`, `<unistd.h>`, `<sys/wait.h>`).
+- [x] **Create a new C++ project**: Set up your project and include necessary libraries (`<iostream>`, `<string>`, `<unistd.h>`, `<sys/wait.h>`).
 
 ## **2. Core Functionality**
 ### **Shell Basics**
-- [ ] **Design the shell prompt**: Decide on a basic shell prompt.
-- [ ] **Exit command**: Implement a way to exit the shell (e.g., if the user types `exit`).
+- [x] **Design the shell prompt**: Decide on a basic shell prompt.
+- [x] **Exit command**: Implement a way to exit the shell (e.g., if the user types `exit`).
 - [ ] **Print working directory (pwd)**: Use `getcwd()` to implement the `pwd` command.
 - [ ] **Change directory (cd)**: Use `chdir()` to implement the `cd` command.
-- [ ] **Clear screen**: Implement a command to clear the terminal.
-- [ ] **Prompt customization**: Customize the prompt to display user or directory info (e.g., `user@host:~$`).
+- [x] **Clear screen**: Implement a command to clear the terminal.
+- [ ] **Prompt customization**: add more colors and fun to the prompt, it's too dull right now.
 
 ### **Command Execution**
-- [ ] **Read user input**: Use `std::getline` to capture input from the user.
-- [ ] **Tokenize input**: Split the input string into commands and arguments using a tokenizer like `std::istringstream` or `strtok`.
+- [x] **Read user input**: Use `std::getline` to capture input from the user.
+- [x] **Tokenize input**: Split the input string into commands and arguments using a tokenizer like `std::istringstream` or `strtok`.
 - [ ] **Fork a child process**: Use `fork()` to create a new process for command execution.
 - [ ] **Execute commands**: In the child process, use `execvp()` to execute the command.
 - [ ] **Wait for the child process**: In the parent process, use `waitpid()` to wait for the child to complete.

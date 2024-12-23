@@ -1,0 +1,4 @@
+/snap/clion/310/bin/cmake/linux/x64/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "Unix Makefiles" -S /home/ramez/Shell-Elbalad -B /home/ramez/Shell-Elbalad/cmake-build-debug
+-- Configuring done (0.0s)
+-- Generating done (0.0s)
+-- Build files have been written to: /home/ramez/Shell-Elbalad/cmake-build-debug
