@@ -1,3 +1,0 @@
-/home/ramez/Shell-Elbalad/cmake-build-debug/CMakeFiles/Shell_Elbalad.dir
-/home/ramez/Shell-Elbalad/cmake-build-debug/CMakeFiles/edit_cache.dir
-/home/ramez/Shell-Elbalad/cmake-build-debug/CMakeFiles/rebuild_cache.dir
