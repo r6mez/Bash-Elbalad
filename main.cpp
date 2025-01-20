@@ -1,6 +1,7 @@
 #include <iostream>
 #include "command.h"
 #include "general_commands.h"
+#include "data.h"
 using namespace std;
 
 int main() {
@@ -15,6 +16,7 @@ int main() {
         string input;
         getline(cin, input);
 
+        cout << "Received input: " << input << endl;
         command newCommand(input);
 
         newCommand.printCommandDetails();
