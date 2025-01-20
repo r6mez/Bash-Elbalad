@@ -1,13 +1,18 @@
-#ifndef GENERAL_COMMANDS_H
-#define GENERAL_COMMANDS_H
 #include <climits>
 #include <unistd.h>
+#include <pwd.h>
 #include "data.h"
 #include "helper_functions.h"
 using namespace std;
 
 void fetchUser(){
-    user = getlogin();
+    struct passwd *pw = getpwuid(getuid());
+    if (pw != nullptr) {
+        user = pw->pw_name;
+    } else {
+        perror("getpwuid() error");
+        user = "unknown";
+    }
 }
 
 void fetchCurrentDirectory() {
@@ -23,10 +28,9 @@ void clear() {
     cout << "\033[2J\033[1;1H";
 }
 
-
 void printCommandPrompt() {
     cout << user << " " << shortenDirectory(currentDirectory) << " > ";
 }
 
-#endif GENERAL_COMMANDS_H // GENERAL_COMMANDS_H
+
 
