@@ -32,6 +32,6 @@ string shortenDirectory(string& path) {
     return result.empty() ? "/" : result;
 }
 
-
+// test
 
 #endif //HELPER_FUNCTIONS_H
