@@ -9,7 +9,7 @@ A simple linux shell project.
 ### **Shell Basics**
 - [x] **Design the shell prompt**: Decide on a basic shell prompt.
 - [x] **Exit command**: Implement a way to exit the shell (e.g., if the user types `exit`).
-- [ ] **Print working directory (pwd)**: Use `getcwd()` to implement the `pwd` command.
+- [x] **Print working directory (pwd)**: Use `getcwd()` to implement the `pwd` command.
 - [ ] **Change directory (cd)**: Use `chdir()` to implement the `cd` command.
 - [x] **Clear screen**: Implement a command to clear the terminal.
 - [ ] **Prompt customization**: add more colors and fun to the prompt, it's too dull right now.
@@ -27,12 +27,12 @@ A simple linux shell project.
 - [ ] **rm**: Delete files.
 - [ ] **mv**: Move or rename files.
 - [ ] **cp**: Copy files.
-- [ ] **ls**: List directory contents.
-- [ ] **stat**: Display detailed file information.
+- [x] **ls**: List directory contents.
+- [x] **stat**: Display detailed file information.
 - [ ] **chmod**: Change file permissions.
 - [ ] **find**: Search for files.
-- [ ] **mkdir**: Create directories.
-- [ ] **rmdir**: Remove directories.
+- [x] **mkdir**: Create directories.
+- [x] **rmdir**: Remove directories.
 - [ ] **du**: Display disk usage of files or directories.
 - [ ] **ln**: Create symbolic or hard links.
 - [ ] **df**: Display available disk space.
