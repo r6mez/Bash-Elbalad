@@ -16,15 +16,18 @@ int main() {
         string input;
         getline(cin, input);
 
-        cout << "Received input: " << input << endl;
         command newCommand(input);
-
+        if(newCommand.name != "pwd"){
         newCommand.printCommandDetails();
+        }
 
         if (newCommand.name == "exit") {
             return 0;
         } else if (newCommand.name == "clear") {
             clear();
+        }
+        else if (newCommand.name == "pwd"){
+            cout<<currentDirectory<<endl;
         }
     }
 }
