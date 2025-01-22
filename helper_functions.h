@@ -33,5 +33,4 @@ string shortenDirectory(string& path) {
 }
 
 
-
 #endif //HELPER_FUNCTIONS_H

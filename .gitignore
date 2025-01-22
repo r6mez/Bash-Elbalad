@@ -2,3 +2,6 @@ cmake-build-debug/
 build/
 .vscode/
 .idea/
+*.o
+Makefile
+Shell_Elbalad
