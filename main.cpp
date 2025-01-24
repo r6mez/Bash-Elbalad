@@ -17,10 +17,11 @@ int main() {
         getline(cin, input);
 
         command newCommand(input);
-        newCommand.printCommandDetails();
+        if(validOptions(newCommand) == false) continue;
+        if(validParameterNumber(newCommand) == false) continue;
 
         if (newCommand.name == "exit") {
-            return 0;
+            exit(0);
         }
         else if (newCommand.name == "clear") {
             clear();
@@ -29,31 +30,31 @@ int main() {
             cout << currentDirectory << endl;
         }
         else if (newCommand.name == "ls") {
-            diplayCurrentDirectoryContent(newCommand.parameters, newCommand.options);
+            diplayCurrentDirectoryContent(newCommand);
         }
         else if (newCommand.name == "stat") {
-            displayFileInfo(newCommand.parameters, newCommand.options);
+            displayFileInfo(newCommand);
         }
         else if (newCommand.name == "mkdir") {
-            createDirectory(newCommand.parameters, newCommand.options);
+            createDirectory(newCommand);
         }
         else if (newCommand.name == "rmdir") {
-            removeDirectory(newCommand.parameters, newCommand.options);
+            removeDirectory(newCommand);
         }
         else if (newCommand.name == "touch") {
-            createFile(newCommand.parameters, newCommand.options);
+            createFile(newCommand);
         }
         else if (newCommand.name == "cat") {
-            ReadFileContent(newCommand.parameters, newCommand.options);
+            ReadFileContent(newCommand);
         }
         else if (newCommand.name == "rm") {
-            DeleteFile(newCommand.parameters, newCommand.options);
+            DeleteFile(newCommand);
         }
         else if (newCommand.name == "mv") {
-            MoveFile(newCommand.parameters, newCommand.options);
+            MoveFile(newCommand);
         }
         else if (newCommand.name == "cp") {
-            CopyFile(newCommand.parameters, newCommand.options);
+            CopyFile(newCommand);
         }
     }
 }
