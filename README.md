@@ -27,12 +27,12 @@ A simple linux shell project.
 - [x] **rm**: Delete files.
 - [x] **mv**: Move or rename files.
 - [x] **cp**: Copy files.
-- [ ] **ls**: List directory contents.
-- [ ] **stat**: Display detailed file information.
+- [x] **ls**: List directory contents.
+- [x] **stat**: Display detailed file information.
 - [ ] **chmod**: Change file permissions.
 - [ ] **find**: Search for files.
-- [ ] **mkdir**: Create directories.
-- [ ] **rmdir**: Remove directories.
+- [x] **mkdir**: Create directories.
+- [x] **rmdir**: Remove directories.
 - [ ] **du**: Display disk usage of files or directories.
 - [ ] **ln**: Create symbolic or hard links.
 - [ ] **df**: Display available disk space.
