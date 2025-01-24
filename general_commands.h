@@ -6,11 +6,13 @@
 #include <sys/stat.h> // For stat, lstat
 #include <cstring>    // For strerror
 #include <fcntl.h>    // For open, O_CREAT, O_WRONLY, O_RDONLY
+#include <filesystem> // For recursive_directory_iterator
 #include <iomanip>
 #include <set>
 #include "data.h"
 #include "helper_functions.h"
 using namespace std;
+using namespace filesystem;
 
 void clear() {
     cout << "\033[2J\033[1;1H";
@@ -42,7 +44,7 @@ void diplayCurrentDirectoryContent(command& cmd) {
     string path = cmd.parameters.empty() ? currentDirectory : cmd.parameters[0];
 
     bool longListing = false;
-    for (char option : cmd.options) { 
+    for (char option : cmd.options) {
         if (option == 'l') {
             longListing = true;
             break;
@@ -244,7 +246,26 @@ void displayFileInfo(command& cmd) {
 void createDirectory(command& cmd) {
     string path = cmd.parameters[0];
 
-    if (mkdir(path.c_str(), 0755) == -1) {
+    if (!cmd.options.empty() && cmd.options[0] == 'p') {
+        stringstream ss(path);
+        string dir;
+        string currentPath;
+
+        while (getline(ss, dir, '/')) {
+            if (dir.empty()) continue; // Skip leading slash
+
+            currentPath += dir + "/";
+
+            if (mkdir(currentPath.c_str(), 0755) == -1) {
+                if (errno != EEXIST) {
+                    return;
+                }
+            }
+        }
+
+        cout << "Directories created: " << path << endl;
+    }
+    else if (mkdir(path.c_str(), 0755) == -1) {
         printError("Cannot create directory '" + path + "' - " + strerror(errno));
     }
     else {
@@ -260,5 +281,24 @@ void removeDirectory(command& cmd) {
     }
     else {
         cout << "Directory created: " << path << endl;
+    }
+}
+
+// find searchStartPath name
+void findFiles(command& cmd) {
+    string searchStartPath, name;
+    if(cmd.parameters.size() == 1) {
+        searchStartPath = currentDirectory;
+        name = cmd.parameters[0];
+    }
+    else if (cmd.parameters.size() == 2) {
+        searchStartPath = cmd.parameters[0];
+        name = cmd.parameters[1];
+    }
+
+    for (const auto& entry : recursive_directory_iterator(searchStartPath)) {
+        if (entry.path().filename().string().find(name) != string::npos) {
+            cout << entry.path().string() << endl;
+        }
     }
 }

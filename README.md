@@ -23,21 +23,22 @@ A simple linux shell project.
 ## **3. File Management Commands**
 - [x] **cat**: Display file contents.
 - [x] **touch**: Create new files.
-- [ ] **rm**: Delete files.
+- [ ] **rm**: 
+    - [x] remove files. 
     - [ ] Implement `-f` option (deletes non-empty dirs).
 - [ ] **mv**
     - [x] Rename files.
     - [ ] Move file.
 - [ ] **cp**: Copy files.
-    - [ ] copy file into the same directory
+    - [x] copy file into the same directory
     - [ ] Implement copy file into other directories
 - [x] **ls**: List directory contents.
     - [x] Implement `-l` option (long list). 
 - [x] **stat**: Display detailed file information.
 - [ ] **chmod**: Change file permissions.
-- [ ] **find**: Search for files.
-- [ ] **mkdir**: Create directories.
-    - [ ] Implement `-p` option.
+- [x] **find**: Search for files.
+- [x] **mkdir**: Create directories.
+    - [x] Implement `-p` option.
 - [x] **rmdir**: Remove directories.
 
 ## **5. Advanced Features**

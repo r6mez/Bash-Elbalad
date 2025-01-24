@@ -56,5 +56,8 @@ int main() {
         else if (newCommand.name == "cp") {
             CopyFile(newCommand);
         }
+        else if (newCommand.name == "find") {
+            findFiles(newCommand);
+        }
     }
 }

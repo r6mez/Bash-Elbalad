@@ -24,8 +24,9 @@ unordered_map<string, pair<set<char>, set<int>>> vaildCommands = {
     {"rm", { {}, {1}}},
     {"mv", { {}, {2}}},
     {"cp", { {}, {2}}},
-    {"mkdir", { {}, {1}}},
+    {"mkdir", { {'p'}, {1}}},
     {"rmdir", { {}, {1}}},
+    {"find", { {}, {1, 2}}},
     {"exit", { {}, {0}}},
 };
 
