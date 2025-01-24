@@ -22,11 +22,11 @@ A simple linux shell project.
 - [ ] **Wait for the child process**: In the parent process, use `waitpid()` to wait for the child to complete.
 
 ## **3. File Management Commands**
-- [ ] **cat**: Display file contents.
-- [ ] **touch**: Create new files.
-- [ ] **rm**: Delete files.
-- [ ] **mv**: Move or rename files.
-- [ ] **cp**: Copy files.
+- [x] **cat**: Display file contents.
+- [x] **touch**: Create new files.
+- [x] **rm**: Delete files.
+- [x] **mv**: Move or rename files.
+- [x] **cp**: Copy files.
 - [x] **ls**: List directory contents.
 - [x] **stat**: Display detailed file information.
 - [ ] **chmod**: Change file permissions.
