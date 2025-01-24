@@ -13,7 +13,7 @@ They have to be here and initialized when the program starts
 and only when user or directory changed.
  */
 
-// command name + vaild options + number of vaild parameters
+ // command name + vaild options + number of vaild parameters
 unordered_map<string, pair<set<char>, set<int>>> vaildCommands = {
     {"clear", { {}, {0}}},
     {"pwd", { {}, {0}}},

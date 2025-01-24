@@ -17,8 +17,9 @@ int main() {
         getline(cin, input);
 
         command newCommand(input);
-        if(validOptions(newCommand) == false) continue;
-        if(validParameterNumber(newCommand) == false) continue;
+        if (validOptions(newCommand) == false || validParameterNumber(newCommand) == false) {
+            continue;
+        }
 
         if (newCommand.name == "exit") {
             exit(0);
