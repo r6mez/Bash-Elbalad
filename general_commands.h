@@ -12,13 +12,17 @@
 #include "helper_functions.h"
 using namespace std;
 
+void clear() {
+    cout << "\033[2J\033[1;1H";
+}
+
 void fetchUser() {
     struct passwd* pw = getpwuid(getuid());
     if (pw != nullptr) {
         user = pw->pw_name;
     }
     else {
-        perror("getpwuid() error");
+        printError("Couldn't get user name - " + string(strerror(errno)));
         user = "unknown";
     }
 }
@@ -29,100 +33,76 @@ void fetchCurrentDirectory() {
         currentDirectory = cwd;
     }
     else {
-        perror("getcwd() error");
+        printError("Couldn't get current directory - " + string(strerror(errno)));
     }
 }
 
-void clear() {
-    cout << "\033[2J\033[1;1H";
-}
 
-void printCommandPrompt() {
-    cout << user << " " << shortenDirectory(currentDirectory) << " > ";
-}
+void diplayCurrentDirectoryContent(command& cmd) {
+    string path = cmd.parameters.empty() ? currentDirectory : cmd.parameters[0];
 
-void diplayCurrentDirectoryContent(vector<string>& parameters, vector<char>& options) {
-    string path;
-
-    if (parameters.empty()) {
-        cout << "Didn't provide a file path!" << endl;
-    }
-    else if (parameters.size() == 1) {
-        path = parameters.front();
-    }
-    else {
-        cout << "Too many parameters! only enter 1 path." << endl;
-        return;
-    }
-
-    // Check if there's any invalid option.
-    if (!options.empty()) {
-        set<char> validOptions = { 'l' };
-        for (char option : options) {
-            if (!validOptions.count(option)) {
-                cout << "Invalid option: " << option << endl;
-                return;
-            }
+    bool longListing = false;
+    for (char option : cmd.options) { 
+        if (option == 'l') {
+            longListing = true;
+            break;
         }
     }
-
-    cout << "Invalid options: ";
-    for (char option : options) {
-        cout << option << ", ";
-    }
-    cout << endl;
 
     DIR* directory = opendir(path.c_str());
 
     struct dirent* entry;
     while ((entry = readdir(directory)) != nullptr) {
-        if (options.empty()) {
-            cout << entry->d_name << " ";
-        }
-        else if (options.front() == 'l') {
-            int width = 40;
-            cout << left << setw(width) << entry->d_name << setw(width) << entry->d_reclen << endl;
-        }
-    }
-    cout << endl;
-}
+        string fullPath = path + "/" + entry->d_name;
+        struct stat fileStat;
+        if (stat(fullPath.c_str(), &fileStat) == 0) {
+            if (longListing) {
+                // Display file permissions
+                cout << ((S_ISDIR(fileStat.st_mode)) ? "d" : "-")
+                    << ((fileStat.st_mode & S_IRUSR) ? "r" : "-")
+                    << ((fileStat.st_mode & S_IWUSR) ? "w" : "-")
+                    << ((fileStat.st_mode & S_IXUSR) ? "x" : "-")
+                    << ((fileStat.st_mode & S_IRGRP) ? "r" : "-")
+                    << ((fileStat.st_mode & S_IWGRP) ? "w" : "-")
+                    << ((fileStat.st_mode & S_IXGRP) ? "x" : "-")
+                    << ((fileStat.st_mode & S_IROTH) ? "r" : "-")
+                    << ((fileStat.st_mode & S_IWOTH) ? "w" : "-")
+                    << ((fileStat.st_mode & S_IXOTH) ? "x" : "-") << " ";
 
-void createFile(vector<string>& parameters, vector<char>& options) {
-    string path;
+                // Display number of links
+                cout << setw(3) << fileStat.st_nlink << " ";
 
-    if (parameters.empty()) {
-        cout << "Didn't provide a file path!" << endl;
-    }
-    else if (parameters.size() == 1) {
-        path = parameters.front();
-    }
-    else {
-        cout << "Too many parameters! only enter 1 path." << endl;
-        return;
-    }
+                // Display file size
+                cout << setw(8) << fileStat.st_size << " ";
 
-    // Check if there's any invalid option.
-    if (!options.empty()) {
-        set<char> validOptions = { 'l' };
-        for (char option : options) {
-            if (!validOptions.count(option)) {
-                cout << "Invalid option: " << option << endl;
-                return;
+                // Display last modification time
+                char timeBuf[80];
+                strftime(timeBuf, sizeof(timeBuf), "%Y-%m-%d %H:%M:%S", localtime(&fileStat.st_mtime));
+                cout << timeBuf << " ";
+
+                // Display file name
+                cout << entry->d_name << endl;
+            }
+            else {
+                cout << entry->d_name << " ";
             }
         }
-    }
-
-    cout << "Invalid options: ";
-    for (char option : options) {
-        cout << option << ", ";
+        else {
+            printError(("Unable to get file stats for " + string(entry->d_name) + " - " + string(strerror(errno))).c_str());
+        }
     }
     cout << endl;
 
+    closedir(directory);
+}
+
+void createFile(command& cmd) {
+    string path = cmd.parameters[0];
 
     // create new file
     int fileDescriptor = open(path.c_str(), O_CREAT | O_WRONLY, 0644);
     if (fileDescriptor == -1) {
-        perror("Error creating file");
+        printError("Couldn't creat file - " + string(strerror(errno)));
         return;
     }
 
@@ -130,33 +110,13 @@ void createFile(vector<string>& parameters, vector<char>& options) {
 }
 
 
-void ReadFileContent(vector<string>& parameters, vector<char>& options) {
-    string path;
-
-    if (parameters.empty()) {
-        cout << "Didn't provide a file path!" << endl;
-    }
-    else if (parameters.size() == 1) {
-        path = parameters.front();
-    }
-    else {
-        cout << "Too many parameters! only enter 1 path." << endl;
-        return;
-    }
-
-    // Check if there's any invalid option.
-    if (!options.empty()) {
-        cout << "Invalid options: ";
-        for (char option : options) {
-            cout << option << ", ";
-        }
-        cout << endl;
-    }
+void ReadFileContent(command& cmd) {
+    string path = cmd.parameters[0];
 
     // Open the file in read-only mode
     int fileDescriptor = open(path.c_str(), O_RDONLY);
     if (fileDescriptor == -1) {
-        perror("Error opening file");
+        printError("couldn't open file - " + string(strerror(errno)));
         return;
     }
 
@@ -170,127 +130,52 @@ void ReadFileContent(vector<string>& parameters, vector<char>& options) {
     }
 
     if (bytesRead == -1) {
-        perror("Error reading file");
+        printError("couldn't read file - " + string(strerror(errno)));
     }
+
+    cout << endl;
 
     // Close the file
     close(fileDescriptor);
-
-
 }
 
-void DeleteFile(vector<string>& parameters, vector<char>& options) {
-    string path;
-
-    if (parameters.empty()) {
-        cout << "Didn't provide a file path!" << endl;
-    }
-    else if (parameters.size() == 1) {
-        path = parameters.front();
-    }
-    else {
-        cout << "Too many parameters! only enter 1 path." << endl;
-        return;
-    }
-
-    // Check if there's any invalid option.
-    if (!options.empty()) {
-        cout << "Invalid options: ";
-        for (char option : options) {
-            cout << option << ", ";
-        }
-        cout << endl;
-    }
+void DeleteFile(command& cmd) {
+    string path = cmd.parameters[0];
 
     // delete file with unlink    
     if (unlink(path.c_str()) == -1) {
-        perror("Error deleting file");
+        printError("couldn't delete file - " + string(strerror(errno)));
     }
     else {
         cout << "File deleted successfully: " << path << endl;
     }
 }
 
-void MoveFile(vector<string>& parameters, vector<char>& options) {
-    string sourcePath, destinationPath;
-
-
-    if (parameters.empty()) {
-        cout << "Didn't provide a file path!" << endl;
-        return;
-    }
-    else if (parameters.size() == 1) {
-        cout << "Too few parameters! You must specify a source and destination path." << endl;
-        return;
-    }
-    else if (parameters.size() == 2) {
-        sourcePath = parameters[0];
-        destinationPath = parameters[1];
-    }
-    else {
-        cout << "Too many parameters! Only enter 2 paths (source and destination)." << endl;
-        return;
-    }
-
-    // Check if there's any invalid option.
-    if (!options.empty()) {
-        cout << "Invalid options: ";
-        for (char option : options) {
-            cout << option << ", ";
-        }
-        cout << endl;
-        return;
-    }
+void MoveFile(command& cmd) {
+    string sourcePath = cmd.parameters[0];
+    string destinationPath = cmd.parameters[1];
 
     // Rename or Move file
     if (rename(sourcePath.c_str(), destinationPath.c_str()) != 0) {
-        perror("Error moving file");
+        printError("couldn't move file - " + string(strerror(errno)));
     }
-
 }
 
-void CopyFile(vector<string>& parameters, vector<char>& options) {
-    string sourcePath, destinationPath;
-
-
-    if (parameters.empty()) {
-        cout << "Didn't provide a file path!" << endl;
-        return;
-    }
-    else if (parameters.size() == 1) {
-        cout << "Too few parameters! You must specify a source and destination path." << endl;
-        return;
-    }
-    else if (parameters.size() == 2) {
-        sourcePath = parameters[0];
-        destinationPath = parameters[1];
-    }
-    else {
-        cout << "Too many parameters! Only enter 2 paths (source and destination)." << endl;
-        return;
-    }
-
-    // Check if there's any invalid option.
-    if (!options.empty()) {
-        cout << "Invalid options: ";
-        for (char option : options) {
-            cout << option << ", ";
-        }
-        cout << endl;
-        return;
-    }
+void CopyFile(command& cmd) {
+    string sourcePath = cmd.parameters[0];
+    string destinationPath = cmd.parameters[1];
 
     // Open source file
     int sourceFd = open(sourcePath.c_str(), O_RDONLY);
     if (sourceFd == -1) {
-        perror("Error opening source file");
+        printError("Source file path not vaild! - " + string(strerror(errno)));
         return;
     }
 
     // Open or create destination file
     int destFd = open(destinationPath.c_str(), O_WRONLY | O_CREAT | O_TRUNC, 0644);
     if (destFd == -1) {
-        perror("Error opening destination file");
+        printError("Destination file path not vaild! - " + string(strerror(errno)));
         close(sourceFd);
         return;
     }
@@ -301,7 +186,7 @@ void CopyFile(vector<string>& parameters, vector<char>& options) {
     while ((bytesRead = read(sourceFd, buffer, sizeof(buffer))) > 0) {
         ssize_t bytesWritten = write(destFd, buffer, bytesRead);
         if (bytesWritten == -1) {
-            perror("Error writing to destination file");
+            printError("Couldn't write. - " + string(strerror(errno)));
             close(sourceFd);
             close(destFd);
             return;
@@ -309,131 +194,69 @@ void CopyFile(vector<string>& parameters, vector<char>& options) {
     }
 
     if (bytesRead == -1) {
-        perror("Error reading from source file");
+        printError("can't read from source file - " + string(strerror(errno)));
     }
 
     close(sourceFd);
     close(destFd);
-
 }
 
 
 
-void displayFileInfo(vector<string>& parameters, vector<char>& options) {
-    string path;
-
-    if (parameters.empty()) {
-        cout << "Didn't provide a file path!" << endl;
-    }
-    else if (parameters.size() == 1) {
-        path = parameters.front();
-    }
-    else {
-        cout << "Too many parameters! only enter 1 path or 0." << endl;
-        return;
-    }
-
-    // Check if there's any invalid option.
-    if (!options.empty()) {
-        cout << "Invalid options: ";
-        for (char option : options) {
-            cout << option << ", ";
-        }
-        cout << endl;
-    }
-
+void displayFileInfo(command& cmd) {
+    string path = cmd.parameters[0];
 
     struct stat fileInfo;
 
     // Use lstat to avoid following symbolic links
     if (lstat(path.c_str(), &fileInfo) == -1) {
-        cout << "Error: Cannot stat " << path << "' - " << strerror(errno) << endl;
+        printError("Cannot stat " + path + " - " + strerror(errno));
         return;
     }
 
     // Print file information
-    cout << "\tFile: " << path << endl;
-    cout << "\tSize: " << fileInfo.st_size << " bytes" << endl;
-    cout << "\tInode: " << fileInfo.st_ino << endl;
-    cout << "\tLinks: " << fileInfo.st_nlink << endl;
-    cout << "\tPermissions: " << oct << fileInfo.st_mode << dec << endl;
-    cout << "\tUID: " << fileInfo.st_uid << endl;
-    cout << "\tGID: " << fileInfo.st_gid << endl;
-    cout << "\tAccess: " << ctime(&fileInfo.st_atime);
-    cout << "\tModify: " << ctime(&fileInfo.st_mtime);
-    cout << "\tChange: " << ctime(&fileInfo.st_ctime);
+    cout << "File: " << path << endl;
+    cout << "Size: " << fileInfo.st_size << " bytes" << endl;
+    cout << "Inode: " << fileInfo.st_ino << endl;
+    cout << "Links: " << fileInfo.st_nlink << endl;
+    cout << "Permissions: " << oct << fileInfo.st_mode << dec << endl;
+    cout << "UID: " << fileInfo.st_uid << endl;
+    cout << "GID: " << fileInfo.st_gid << endl;
+    cout << "Access: " << ctime(&fileInfo.st_atime);
+    cout << "Modify: " << ctime(&fileInfo.st_mtime);
+    cout << "Change: " << ctime(&fileInfo.st_ctime);
 
     // Check file type
     if (S_ISDIR(fileInfo.st_mode)) {
-        cout << "\tType: Directory" << endl;
+        cout << "Type: Directory" << endl;
     }
     else if (S_ISREG(fileInfo.st_mode)) {
-        cout << "\tType: Regular File" << endl;
+        cout << "Type: Regular File" << endl;
     }
     else if (S_ISLNK(fileInfo.st_mode)) {
-        cout << "\tType: Symbolic Link" << endl;
+        cout << "Type: Symbolic Link" << endl;
     }
     else {
-        cout << "\tType: Other" << endl;
+        cout << "Type: Other" << endl;
     }
 }
 
-void createDirectory(vector<string>& parameters, vector<char>& options) {
-    string path;
-
-    if (parameters.empty()) {
-        cout << "Didn't provide a file path!" << endl;
-    }
-    else if (parameters.size() == 1) {
-        path = parameters.front();
-    }
-    else {
-        cout << "Too many parameters! only enter 1 path." << endl;
-        return;
-    }
-
-    // Check if there's any invalid option.
-    if (!options.empty()) {
-        cout << "Invalid options: ";
-        for (char option : options) {
-            cout << option << ", ";
-        }
-        cout << endl;
-    }
+void createDirectory(command& cmd) {
+    string path = cmd.parameters[0];
 
     if (mkdir(path.c_str(), 0755) == -1) {
-        cout << "Error: Cannot create directory '" << path << "' - " << strerror(errno) << endl;
+        printError("Cannot create directory '" + path + "' - " + strerror(errno));
     }
     else {
         cout << "Directory created: " << path << endl;
     }
 }
 
-void removeDirectory(vector<string>& parameters, vector<char>& options) {
-    string path;
-
-    if (parameters.empty()) {
-        cout << "Didn't provide a file path!" << endl;
-    }
-    else if (parameters.size() == 1) {
-        path = parameters.front();
-    }
-    else {
-        cout << "Too many parameters! only enter 1 path." << endl;
-        return;
-    }
-
-    // Check if there's any invalid option.
-    if (!options.empty()) {
-        cout << "Invalid options: ";
-        for (char option : options) {
-            cout << option << ", ";
-        }
-        cout << endl;
-    }
+void removeDirectory(command& cmd) {
+    string path = cmd.parameters[0];
 
     if (rmdir(path.c_str()) == -1) {
-        cout << "Error: Cannot remove directory '" << path << "' - " << strerror(errno) << endl;
+        printError("Cannot remove directory '" + path + "' - " + strerror(errno));
     }
     else {
         cout << "Directory created: " << path << endl;
