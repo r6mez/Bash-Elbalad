@@ -17,9 +17,6 @@ int main() {
         getline(cin, input);
 
         command newCommand(input);
-        if (validOptions(newCommand) == false || validParameterNumber(newCommand) == false) {
-            continue;
-        }
 
         if (newCommand.name == "exit") {
             exit(0);
@@ -59,6 +56,8 @@ int main() {
         }
         else if (newCommand.name == "find") {
             findFiles(newCommand);
+        } else {
+            execute_command(newCommand);
         }
     }
 }
