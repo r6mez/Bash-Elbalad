@@ -45,5 +45,5 @@ A simple linux shell project.
 - [ ] **Running multiple commands (;)**: Support executing multiple commands in sequence.
 
 ### **Environment and History**
-- [ ] **History**: Store previously run commands and allow the user to view them using a command like `history`.
-- [ ] **Handle Arrow Presses**: moving around the line and accessing history.
+- [x] **History**: Store previously run commands and allow the user to view them using a command like `history`.
+- [x] **Handle Arrow Presses**: moving around the line and accessing history.
