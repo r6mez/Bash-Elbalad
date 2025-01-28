@@ -1,28 +1,34 @@
 #include <iostream>
+#include <termios.h>
 #include "command.h"
 #include "general_commands.h"
 #include "data.h"
+#include "history.h"
 using namespace std;
 
 int main() {
     fetchUser();
     fetchCurrentDirectory();
-    clear();
+    loadAllCommandsFromFile();
+    clearScreen();
 
     while (true) {
         printCommandPrompt();
+        cout.flush();
 
-        // wait for input
-        string input;
-        getline(cin, input);
+        enableRawMode(); // Enable raw input mode
+        string input = getInputWithArrows();
+        disableRawMode();
+
+        if(input == "\n" || input == "\r\n") continue; // Handles empty input
 
         command newCommand(input);
 
         if (newCommand.name == "exit") {
-            exit(0);
+            break;
         }
         else if (newCommand.name == "clear") {
-            clear();
+            clearScreen();
         }
         else if (newCommand.name == "pwd") {
             cout << currentDirectory << endl;
@@ -56,8 +62,11 @@ int main() {
         }
         else if (newCommand.name == "find") {
             findFiles(newCommand);
-        } else {
+        }
+        else {
             execute_command(newCommand);
         }
+
+        saveCommandToFile(input);
     }
 }

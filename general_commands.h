@@ -15,7 +15,7 @@
 using namespace std;
 using namespace filesystem;
 
-void clear() {
+void clearScreen() {
     cout << "\033[2J\033[1;1H";
 }
 
