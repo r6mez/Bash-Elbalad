@@ -3,7 +3,7 @@
 #include "command.h"
 #include "general_commands.h"
 #include "data.h"
-#include "history.h"
+#include "input_and_history.h"
 using namespace std;
 
 int main() {
