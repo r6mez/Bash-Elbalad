@@ -16,9 +16,7 @@ A simple linux shell project.
 
 ### **Command Execution**
 - [x] Command parsing
-- [ ] Fork a child process
-- [ ] Execute commands: use `execvp()` to execute the command in child process.
-- [ ] Wait for the child process `waitpid()`
+- [x] Fork a child process using `fork()` and`execvp()`.
 
 ## **3. File Management Commands**
 - [x] **cat**: Display file contents.
@@ -35,7 +33,6 @@ A simple linux shell project.
 - [x] **ls**: List directory contents.
     - [x] Implement `-l` option (long list). 
 - [x] **stat**: Display detailed file information.
-- [ ] **chmod**: Change file permissions.
 - [x] **find**: Search for files.
 - [x] **mkdir**: Create directories.
     - [x] Implement `-p` option.

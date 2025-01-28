@@ -7,6 +7,7 @@
 #include <cstring>    // For strerror
 #include <fcntl.h>    // For open, O_CREAT, O_WRONLY, O_RDONLY
 #include <filesystem> // For recursive_directory_iterator
+#include <sys/wait.h> // For waitpid()
 #include <iomanip>
 #include <set>
 #include "data.h"
@@ -41,6 +42,9 @@ void fetchCurrentDirectory() {
 
 
 void diplayCurrentDirectoryContent(command& cmd) {
+    if (validOptions(cmd) == false || validParameterNumber(cmd) == false) return;
+
+
     string path = cmd.parameters.empty() ? currentDirectory : cmd.parameters[0];
 
     bool longListing = false;
@@ -99,6 +103,8 @@ void diplayCurrentDirectoryContent(command& cmd) {
 }
 
 void createFile(command& cmd) {
+    if (validOptions(cmd) == false || validParameterNumber(cmd) == false) return;
+
     string path = cmd.parameters[0];
 
     // create new file
@@ -113,6 +119,8 @@ void createFile(command& cmd) {
 
 
 void ReadFileContent(command& cmd) {
+    if (validOptions(cmd) == false || validParameterNumber(cmd) == false) return;
+
     string path = cmd.parameters[0];
 
     // Open the file in read-only mode
@@ -142,6 +150,8 @@ void ReadFileContent(command& cmd) {
 }
 
 void DeleteFile(command& cmd) {
+    if (validOptions(cmd) == false || validParameterNumber(cmd) == false) return;
+
     string path = cmd.parameters[0];
 
     // delete file with unlink    
@@ -154,6 +164,8 @@ void DeleteFile(command& cmd) {
 }
 
 void MoveFile(command& cmd) {
+    if (validOptions(cmd) == false || validParameterNumber(cmd) == false) return;
+
     string sourcePath = cmd.parameters[0];
     string destinationPath = cmd.parameters[1];
 
@@ -164,6 +176,8 @@ void MoveFile(command& cmd) {
 }
 
 void CopyFile(command& cmd) {
+    if (validOptions(cmd) == false || validParameterNumber(cmd) == false) return;
+
     string sourcePath = cmd.parameters[0];
     string destinationPath = cmd.parameters[1];
 
@@ -206,6 +220,8 @@ void CopyFile(command& cmd) {
 
 
 void displayFileInfo(command& cmd) {
+    if (validOptions(cmd) == false || validParameterNumber(cmd) == false) return;
+
     string path = cmd.parameters[0];
 
     struct stat fileInfo;
@@ -244,6 +260,8 @@ void displayFileInfo(command& cmd) {
 }
 
 void createDirectory(command& cmd) {
+    if (validOptions(cmd) == false || validParameterNumber(cmd) == false) return;
+
     string path = cmd.parameters[0];
 
     if (!cmd.options.empty() && cmd.options[0] == 'p') {
@@ -274,6 +292,8 @@ void createDirectory(command& cmd) {
 }
 
 void removeDirectory(command& cmd) {
+    if (validOptions(cmd) == false || validParameterNumber(cmd) == false) return;
+
     string path = cmd.parameters[0];
 
     if (rmdir(path.c_str()) == -1) {
@@ -286,8 +306,10 @@ void removeDirectory(command& cmd) {
 
 // find searchStartPath name
 void findFiles(command& cmd) {
+    if (validOptions(cmd) == false || validParameterNumber(cmd) == false) return;
+
     string searchStartPath, name;
-    if(cmd.parameters.size() == 1) {
+    if (cmd.parameters.size() == 1) {
         searchStartPath = currentDirectory;
         name = cmd.parameters[0];
     }
@@ -299,6 +321,44 @@ void findFiles(command& cmd) {
     for (const auto& entry : recursive_directory_iterator(searchStartPath)) {
         if (entry.path().filename().string().find(name) != string::npos) {
             cout << entry.path().string() << endl;
+        }
+    }
+}
+
+void execute_command(const command& cmd) {
+    vector<char*> argv;
+    argv.push_back(const_cast<char*>(cmd.name.c_str()));
+
+    if (!cmd.options.empty()) {
+        string option_str = "-";
+        for (const auto& opt : cmd.options) {
+            option_str += opt;
+        }
+        argv.insert(argv.begin() + 1, const_cast<char*>(option_str.c_str()));
+    }
+
+    for (const auto& param : cmd.parameters) {
+        argv.push_back(const_cast<char*>(param.c_str()));
+    }
+
+    argv.push_back(nullptr);
+
+    pid_t pid = fork();
+    if (pid < 0) {
+        printError("Fork failed!");
+        exit(1);
+    }
+    else if (pid == 0) {
+        execvp(argv[0], argv.data());
+        printError("Command not found: " + string(argv[0]));
+        exit(1);
+    }
+    else {
+        int status;
+        waitpid(pid, &status, 0); // Wait for the child process to complete
+
+        if (WIFEXITED(status) == false) {
+            printError("Child process terminated abnormally");
         }
     }
 }
