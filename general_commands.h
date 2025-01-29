@@ -5,6 +5,9 @@
 #include <sys/types.h> // For opendir, readdir, closedir
 #include <sys/stat.h> // For stat, lstat
 #include <cstring>    // For strerror
+#include <cstdio>
+#include <cstdlib>  // for getenv
+#include <fstream>
 #include <fcntl.h>    // For open, O_CREAT, O_WRONLY, O_RDONLY
 #include <filesystem> // For recursive_directory_iterator
 #include <sys/wait.h> // For waitpid()
@@ -14,9 +17,25 @@
 #include "helper_functions.h"
 using namespace std;
 using namespace filesystem;
+namespace fs = std::filesystem;
 
 void clearScreen() {
     cout << "\033[2J\033[1;1H";
+}
+
+void displayDocumentation() {
+    ifstream file("Command_List_Documentation.txt");
+    if (!file.is_open()) {
+        printError("Could not open help file.");
+        return;
+    }
+
+    string line;
+    while (getline(file, line)) {
+        cout << line << endl;
+    }
+
+    file.close();
 }
 
 void fetchUser() {
@@ -102,6 +121,32 @@ void diplayCurrentDirectoryContent(command& cmd) {
     closedir(directory);
 }
 
+void changeDirectory(command& cmd) {
+    if (validOptions(cmd) == false || validParameterNumber(cmd) == false) return;
+
+    string targetDir;
+
+    // Check if user provided a directory
+    if (cmd.parameters.empty()) {
+        // If no parameters, go to the Desktop
+        const char* homeDir = getenv("HOME");  
+        if (homeDir != nullptr) {
+            targetDir = string(homeDir) + "/Desktop";  // Default to Desktop 
+        } else {
+            printError("Could not retrieve home directory.");
+            return;
+        }
+    } else {
+        // If the user provided a directory
+        targetDir = cmd.parameters[0];
+    }
+
+    // Attempt to change the directory
+    if (chdir(targetDir.c_str()) != 0) {
+        printError("Couldn't change directory to " + targetDir + " - " + string(strerror(errno)));
+    } 
+}
+
 void createFile(command& cmd) {
     if (validOptions(cmd) == false || validParameterNumber(cmd) == false) return;
 
@@ -118,80 +163,168 @@ void createFile(command& cmd) {
 }
 
 
-void ReadFileContent(command& cmd) {
+void readFileContent(command& cmd) {
     if (validOptions(cmd) == false || validParameterNumber(cmd) == false) return;
 
-    string path = cmd.parameters[0];
+    string inputPath = "";  
+    string outputPath = ""; 
 
-    // Open the file in read-only mode
-    int fileDescriptor = open(path.c_str(), O_RDONLY);
-    if (fileDescriptor == -1) {
-        printError("couldn't open file - " + string(strerror(errno)));
+    if (cmd.parameters.size() > 0 && cmd.parameters[0] != ">") {
+        inputPath = cmd.parameters[0];  
+    }
+
+    // Check if output redirection (">") exists
+    if (cmd.parameters.size() > 1 && cmd.parameters[1] == ">") {
+        if (cmd.parameters.size() > 2) {
+            outputPath = cmd.parameters[2];  
+        }
+    }
+
+    if (inputPath.empty()) {
+        printError("Invalid command: No input file specified.");
         return;
     }
 
-    // Read and display the file content
+    int inputFd = open(inputPath.c_str(), O_RDONLY);
+    if (inputFd == -1) {
+        printError("Couldn't open input file - " + string(strerror(errno)));
+        return;
+    }
+
+    // If output redirection exists, open the output file for writing
+    int outputFd = -1;
+    if (!outputPath.empty()) {
+        outputFd = open(outputPath.c_str(), O_WRONLY | O_CREAT | O_TRUNC, 0644);
+        if (outputFd == -1) {
+            printError("Couldn't open or create output file - " + string(strerror(errno)));
+            close(inputFd);
+            return;
+        }
+    }
+
+    // Read content from the input file and write to output 
     char buffer[1024];
     ssize_t bytesRead;
-
-    while ((bytesRead = read(fileDescriptor, buffer, sizeof(buffer) - 1)) > 0) {
-        buffer[bytesRead] = '\0';
-        cout << buffer;
+    while ((bytesRead = read(inputFd, buffer, sizeof(buffer))) > 0) {
+        if (outputFd != -1) {
+            ssize_t bytesWritten = write(outputFd, buffer, bytesRead);
+            if (bytesWritten == -1) {
+                printError("Couldn't write to output file - " + string(strerror(errno)));
+                close(inputFd);
+                close(outputFd);
+                return;
+            }
+        } else {
+            cout.write(buffer, bytesRead);
+        }
     }
 
     if (bytesRead == -1) {
-        printError("couldn't read file - " + string(strerror(errno)));
+        printError("Couldn't read input file - " + string(strerror(errno)));
     }
 
-    cout << endl;
-
-    // Close the file
-    close(fileDescriptor);
+    close(inputFd);
+    if (outputFd != -1) {
+        close(outputFd);
+    }
 }
 
-void DeleteFile(command& cmd) {
+
+
+void deleteFile(command& cmd) {
     if (validOptions(cmd) == false || validParameterNumber(cmd) == false) return;
 
     string path = cmd.parameters[0];
 
-    // delete file with unlink    
-    if (unlink(path.c_str()) == -1) {
-        printError("couldn't delete file - " + string(strerror(errno)));
+    if (fs::is_directory(path)) {
+        // Delete the directory and its contents
+        try {
+            fs::remove_all(path);
+        } catch (const fs::filesystem_error& e) {
+            cout << "Error deleting directory: " << e.what() << endl;
+        }
+    } else {
+        // Delete a single file
+        if (unlink(path.c_str()) == -1) {
+            cout << "Couldn't delete file: " << path << " - " << strerror(errno) << endl;
+        } 
     }
-    else {
-        cout << "File deleted successfully: " << path << endl;
-    }
+
 }
 
-void MoveFile(command& cmd) {
+void moveFile(command& cmd) {
     if (validOptions(cmd) == false || validParameterNumber(cmd) == false) return;
 
     string sourcePath = cmd.parameters[0];
     string destinationPath = cmd.parameters[1];
 
-    // Rename or Move file
+   // checks if the destination path is a directory
+   struct stat destStat;
+    if (stat(destinationPath.c_str(), &destStat) == 0 && S_ISDIR(destStat.st_mode)) {
+        // Append the filename to the destination path
+        size_t pos = sourcePath.find_last_of("/\\");
+        string fileName = (pos == string::npos) ? sourcePath : sourcePath.substr(pos + 1);
+        destinationPath += "/" + fileName;
+    }
+
+    // renaming/moving the file
     if (rename(sourcePath.c_str(), destinationPath.c_str()) != 0) {
-        printError("couldn't move file - " + string(strerror(errno)));
-    }
+        if (errno == EXDEV) {
+            // Handle case when moving across filesystems
+            cout << "Moving across filesystems, copying instead..." << endl;
+            ifstream source(sourcePath, ios::binary);
+            ofstream destination(destinationPath, ios::binary);
+
+            if (!source.is_open() || !destination.is_open()) {
+                printError("couldn't open source or destination file");
+                return;
+            }
+
+            // Copy the file
+            destination << source.rdbuf();
+
+            source.close();
+            destination.close();
+
+            // Delete the source file after successful copy
+            if (remove(sourcePath.c_str()) != 0) {
+                printError("couldn't delete source file after copying - " + string(strerror(errno)));
+            } else {
+                cout << "File moved successfully from " << sourcePath << " to " << destinationPath << endl;
+            }
+        } else {
+            // Other errors
+            printError("couldn't move file - " + string(strerror(errno)));
+        }
+    } 
 }
 
-void CopyFile(command& cmd) {
+void copyFile(command& cmd) {
     if (validOptions(cmd) == false || validParameterNumber(cmd) == false) return;
 
     string sourcePath = cmd.parameters[0];
     string destinationPath = cmd.parameters[1];
+
+    // checks if the destination path is a directory
+    struct stat destStat;
+    if (stat(destinationPath.c_str(), &destStat) == 0 && S_ISDIR(destStat.st_mode)) {
+        // Append the filename to the destination path
+        size_t pos = sourcePath.find_last_of("/\\");
+        string fileName = (pos == string::npos) ? sourcePath : sourcePath.substr(pos + 1);
+        destinationPath += "/" + fileName; 
+    }
 
     // Open source file
     int sourceFd = open(sourcePath.c_str(), O_RDONLY);
     if (sourceFd == -1) {
-        printError("Source file path not vaild! - " + string(strerror(errno)));
+        printError("Source file path not valid! - " + string(strerror(errno)));
         return;
     }
 
     // Open or create destination file
     int destFd = open(destinationPath.c_str(), O_WRONLY | O_CREAT | O_TRUNC, 0644);
     if (destFd == -1) {
-        printError("Destination file path not vaild! - " + string(strerror(errno)));
+        printError("Destination file path not valid! - " + string(strerror(errno)));
         close(sourceFd);
         return;
     }
@@ -360,5 +493,31 @@ void execute_command(const command& cmd) {
         if (WIFEXITED(status) == false) {
             printError("Child process terminated abnormally");
         }
+    }
+}
+
+double evaluateExpression(const string& expression) {
+    stringstream ss(expression);
+    double num1, num2;
+    char op;
+    
+    ss >> num1 >> op >> num2;
+    
+    switch(op) {
+        case '+':
+            return num1 + num2;
+        case '-':
+            return num1 - num2;
+        case '*':
+            return num1 * num2;
+        case '/':
+            if (num2 != 0) return num1 / num2;
+            else {
+                cout << "Error: Division by zero!" << endl;
+                return NAN; // Return Not A Number for division by zero
+            }
+        default:
+            cout << "Error: Invalid operator!" << endl;
+            return NAN;
     }
 }

@@ -1,0 +1,108 @@
+touch abdo/t.txt
+rm -f abdo
+mkdir abdo
+touch abdo/test.txt
+mkdir re
+mv abdo/test.txt re
+mv abdo/test.txt abdo/t.txt
+mv abdo/t.txt re
+touch re/test.txt
+mv abdo/t.txt re
+ث�exit
+mv abdo/t.txt re
+mv re/t.txt re/yy.txt
+cp re/test.txt re/yy.txt
+touch abdo/c.txt
+cp re/test.txt abdo/c.txt
+cp re/test.txt 
+cp re/test.txt 
+cat re/test.txt
+clear
+rm -f re
+rm -f abdo
+mkdir abdo
+mkdir rr
+touch rr/test.txt
+cp rr/test.txt abdo/
+cd
+cd exit
+cd
+cd
+cd h/aelaraby
+cd /home/aelaraby/h/aelaraby
+ثءexit
+cd
+cd h/aelaraby
+cd h/aelaraby
+clear
+help
+hepl
+help
+clear
+make
+z
+clear
+make
+./Shell-Elbalad
+clear
+cat > test.txt
+touch t.txt
+touch u.txt
+cat t.txt > u.txt
+cat > new.txt
+cat > u.txt
+cat t.txt > u.txt
+cat t.txt > u.txt
+cat u.txt > yy.txt
+cat > r.txt
+cat > yy.txt
+ث�exit
+cat > yy.txt
+cat yy.txt > u.txt
+cat yy.txt > u.txt
+cat yy.txt > u.txt
+cat > g.txt
+ؤcat > t.txt
+�cat > t.txt
+cat > t.txt
+clear
+ث�exit
+cat yy.txt > u.txt
+cat > r.txt
+touch r.txt
+cat > r.txt
+cat > r.txt
+cat yy.txt > t.txt
+cat yy.txt
+�exit
+cat > r.txt
+cat r.txt
+ؤn
+cat yy.txt > r.txt
+cat > r.txt
+ثءexit
+cat > r.txt
+cat > r.txt
+lll
+cat > r.txt
+cat yy.txt > r.txt
+cat yy.txt > n.txt
+cat > r.txt
+cat > r.txt
+clear
+cat yy.txt
+ثءexit
+cat yy.txt
+cat yy.txt
+cat yy.txt > r.txt
+cleAR
+clear
+*
+pwd ; touch t.txt
+pwd ; touch t.tx
+pwd ; touch u.txt ; rm t.txt
+pwd ; touch u.txt ; rm t.tx
+pwd ; touch u.txt ; rm t.t
+pwd
+ pwd ; touch t.txt
+ pwd ; touch t.tx

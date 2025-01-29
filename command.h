@@ -6,6 +6,7 @@
 #include <sstream>
 using namespace std;
 
+
 struct command {
     string name;
     vector<char> options;
@@ -56,6 +57,7 @@ struct command {
         }
         cout << endl;
     }
+
 };
 
 
