@@ -145,6 +145,8 @@ void changeDirectory(command& cmd) {
     if (chdir(targetDir.c_str()) != 0) {
         printError("Couldn't change directory to " + targetDir + " - " + string(strerror(errno)));
     } 
+
+    fetchCurrentDirectory();
 }
 
 void createFile(command& cmd) {
