@@ -10,7 +10,7 @@ A simple linux shell project.
 - [x] Design the shell prompt
 - [x] `Exit` command
 - [x] `pwd` command
-- [ ] `cd` command
+- [x] `cd` command
 - [x] `clear` command
 - [x] Prompt colors
 
@@ -21,15 +21,15 @@ A simple linux shell project.
 ## **3. File Management Commands**
 - [x] **cat**: Display file contents.
 - [x] **touch**: Create new files.
-- [ ] **rm**: 
+- [x] **rm**: 
     - [x] remove files. 
-    - [ ] Implement `-f` option (deletes non-empty dirs).
-- [ ] **mv**
+    - [x] Implement `-f` option (deletes non-empty dirs).
+- [x] **mv**
     - [x] Rename files.
-    - [ ] Move file.
-- [ ] **cp**: Copy files.
+    - [x] Move file.
+- [x] **cp**: Copy files.
     - [x] copy file into the same directory
-    - [ ] Implement copy file into other directories
+    - [x] Implement copy file into other directories
 - [x] **ls**: List directory contents.
     - [x] Implement `-l` option (long list). 
 - [x] **stat**: Display detailed file information.
@@ -41,8 +41,8 @@ A simple linux shell project.
 ## **5. Advanced Features**
 ### **Command Composition**
 - [ ] **Pipes**: Support commands like `ls | grep cpp` using `pipe()` and `dup2()`.
-- [ ] **Redirection**: Implement input/output redirection (`>`, `<`) using `freopen()` or `dup2()`.
-- [ ] **Running multiple commands (;)**: Support executing multiple commands in sequence.
+- [x] **Redirection**: Implement input/output redirection (`>`, `<`) using `freopen()` or `dup2()`.
+- [x] **Running multiple commands (;)**: Support executing multiple commands in sequence.
 
 ### **Environment and History**
 - [x] **History**: Store previously run commands and allow the user to view them using a command like `history`.
