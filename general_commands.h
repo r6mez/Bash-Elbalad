@@ -128,10 +128,10 @@ void changeDirectory(command& cmd) {
 
     // Check if user provided a directory
     if (cmd.parameters.empty()) {
-        // If no parameters, go to the Desktop
+        // If no parameters, go to the Home directory
         const char* homeDir = getenv("HOME");  
         if (homeDir != nullptr) {
-            targetDir = string(homeDir) + "/Desktop";  // Default to Desktop 
+            targetDir = homeDir;  // Default to Home directory
         } else {
             printError("Could not retrieve home directory.");
             return;

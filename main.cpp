@@ -40,7 +40,7 @@ int main() {
             command newCommand(cmd_input);
 
         if (newCommand.name == "exit") {
-            break;
+            exit(0);
         }
         else if (newCommand.name == "clear") {
             clearScreen();
