@@ -1,10 +1,12 @@
 #ifndef HISTORY_H
 #define HISTORY_H
+#include <iostream>
 #include <fstream>
 #include <vector>
 #include <string>
-/*#include <ncurses.h>*/
-
+#include <ncurses.h>
+#include <termios.h>
+#include <unistd.h>
 using namespace std;
 
 vector<string> history;

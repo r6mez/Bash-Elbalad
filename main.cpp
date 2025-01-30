@@ -1,5 +1,4 @@
 #include <iostream>
-#include <termios.h>
 #include "command.h"
 #include "general_commands.h"
 #include "data.h"

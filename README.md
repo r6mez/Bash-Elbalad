@@ -1,49 +1,57 @@
-# Shell-Elbalad
-A simple linux shell project.
+# > Bash-Elbalad 
 
-# Todo:
-## **1. Project Setup**
-- [x] **Set up the project.**
+Now finally, we can fight using owr own commands along **El-7ag Ebrahim Semple** to defeat **Valanteno Elbalad**. ☝🏻
 
-## **2. Core Functionality**
-### **Shell Basics**
-- [x] Design the shell prompt
-- [x] `Exit` command
-- [x] `pwd` command
-- [x] `cd` command
-- [x] `clear` command
-- [x] Prompt colors
 
-### **Command Execution**
-- [x] Command parsing
-- [x] Fork a child process using `fork()` and`execvp()`.
+**Bash-Elbalad** is a simple Linux shell project designed to mimic basic shell functionalities, aiming to provide a hands-on experience with core Linux shell operations, command execution, file management, and advanced features like piping and redirection.
 
-## **3. File Management Commands**
-- [x] **cat**: Display file contents.
-- [x] **touch**: Create new files.
-- [x] **rm**: 
-    - [x] remove files. 
-    - [x] Implement `-f` option (deletes non-empty dirs).
-- [x] **mv**
-    - [x] Rename files.
-    - [x] Move file.
-- [x] **cp**: Copy files.
-    - [x] copy file into the same directory
-    - [x] Implement copy file into other directories
-- [x] **ls**: List directory contents.
-    - [x] Implement `-l` option (long list). 
-- [x] **stat**: Display detailed file information.
-- [x] **find**: Search for files.
-- [x] **mkdir**: Create directories.
-    - [x] Implement `-p` option.
-- [x] **rmdir**: Remove directories.
 
-## **5. Advanced Features**
-### **Command Composition**
-- [ ] **Pipes**: Support commands like `ls | grep cpp` using `pipe()` and `dup2()`.
-- [x] **Redirection**: Implement input/output redirection (`>`, `<`) using `freopen()` or `dup2()`.
-- [x] **Running multiple commands (;)**: Support executing multiple commands in sequence.
+## 🤝 Collaboration
 
-### **Environment and History**
-- [x] **History**: Store previously run commands and allow the user to view them using a command like `history`.
-- [x] **Handle Arrow Presses**: moving around the line and accessing history.
+This project was brought to life in collaboration with [@aelaraby6](https://github.com/aelaraby6). Working together, we not only built a functional shell but also gained invaluable experience in teamwork, communication, and problem-solving.
+
+
+## ⚡ Features
+
+### **Core Functionality**
+- **Core Shell Functions**: Custom prompt, command execution, history tracking, and arrow key navigation.  
+- **File Management**: Supports `cat`, `touch`, `rm -f`, `mv`, `cp`, `ls -l`, `mkdir -p`, and `rmdir`.  
+- **Command Composition**: Supports pipes (`|`), redirection (`>`, `<`), and multiple commands (`;`).  
+
+
+## 🛠️ Project Setup
+
+Clone the repo, compile, and let the shell magic begin:
+
+```bash
+# Clone the repository
+git clone https://github.com/r6mez/Shell-Elbalad.git
+cd Shell-Elbalad
+
+# Create a build directory and compile using CMake
+mkdir build
+cd build
+cmake ..
+make
+
+# Run the shell
+./Bash_Elbalad
+```
+
+## 📂 Project Structure
+```
+Bash-Elbalad/
+├── command.h             # Command execution logic
+├── data.h                # Data structures and global variables
+├── general_commands.h    # Basic shell commands
+├── helper_functions.h    # Utility functions for shell operations
+├── input_and_history.h   # Input handling and command history
+├── main.cpp              # Entry point of the shell
+│── README.md             # Project documentation
+
+```
+
+
+## 📝 Todo
+
+Check out our [TODO.md](TODO.md).
