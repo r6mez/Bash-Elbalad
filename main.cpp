@@ -10,6 +10,7 @@ int main() {
     fetchCurrentDirectory();
     loadAllCommandsFromFile();
     clearScreen();
+    printHeader();
 
     while (true) {
         printCommandPrompt();

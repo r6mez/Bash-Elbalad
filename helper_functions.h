@@ -39,7 +39,7 @@ string shortenDirectory(string& path) {
 }
 
 void printCommandPrompt() {
-    cout << colors::magenta << user << colors::yellow << " " << shortenDirectory(currentDirectory) << colors::magenta << " > " << colors::reset;
+    cout << colors::orange << user << colors::magenta << " " << shortenDirectory(currentDirectory) << colors::orange << " > " << colors::reset;
 }
 
 void printError(const string& message) {
@@ -86,5 +86,14 @@ vector<string> split(const string& str, char delimiter) {
     }
     
     return tokens;
+}
+
+void printHeader(){
+    cout << colors::magenta << "██╗░░" << colors::orange << "██████╗░░█████╗░░██████╗██╗░░██╗░░░░░░███████╗██╗░░░░░██████╗░░█████╗░██╗░░░░░░█████╗░██████╗░" << colors::reset << endl;
+    cout << colors::magenta << "╚██╗░" << colors::orange << "██╔══██╗██╔══██╗██╔════╝██║░░██║░░░░░░██╔════╝██║░░░░░██╔══██╗██╔══██╗██║░░░░░██╔══██╗██╔══██╗" << colors::reset << endl;
+    cout << colors::magenta << "░╚██╗" << colors::orange << "██████╦╝███████║╚█████╗░███████║█████╗█████╗░░██║░░░░░██████╦╝███████║██║░░░░░███████║██║░░██║" << colors::reset << endl;
+    cout << colors::magenta << "░██╔╝" << colors::orange << "██╔══██╗██╔══██║░╚═══██╗██╔══██║╚════╝██╔══╝░░██║░░░░░██╔══██╗██╔══██║██║░░░░░██╔══██║██║░░██║" << colors::reset << endl;
+    cout << colors::magenta << "██╔╝░" << colors::orange << "██████╦╝██║░░██║██████╔╝██║░░██║░░░░░░███████╗███████╗██████╦╝██║░░██║███████╗██║░░██║██████╔╝" << colors::reset << endl;
+    cout << colors::magenta << "╚═╝░░" << colors::orange << "╚═════╝░╚═╝░░╚═╝╚═════╝░╚═╝░░╚═╝░░░░░░╚══════╝╚══════╝╚═════╝░╚═╝░░╚═╝╚══════╝╚═╝░░╚═╝╚═════╝░" << colors::reset << endl;
 }
 #endif //HELPER_FUNCTIONS_H
