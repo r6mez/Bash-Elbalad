@@ -17,17 +17,19 @@ and only when user or directory changed.
 unordered_map<string, pair<set<char>, set<int>>> vaildCommands = {
     {"clear", { {}, {0}}},
     {"pwd", { {}, {0}}},
+    {"cd", { {}, {0,1}}},
     {"ls", { {'l'}, {0, 1}}},
     {"stat", { {}, {1}}},
     {"touch", { {}, {1}}},
-    {"cat", { {}, {1}}},
-    {"rm", { {}, {1}}},
+    {"cat", { {}, {1,2,3}}},
+    {"rm", { {'f'}, {1}}},
     {"mv", { {}, {2}}},
     {"cp", { {}, {2}}},
     {"mkdir", { {'p'}, {1}}},
     {"rmdir", { {}, {1}}},
     {"find", { {}, {1, 2}}},
     {"exit", { {}, {0}}},
+    {"help", { {}, {0}}}
 };
 
 class colors {

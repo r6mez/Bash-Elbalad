@@ -5,3 +5,4 @@ build/
 *.o
 Makefile
 Shell_Elbalad
+history.txt

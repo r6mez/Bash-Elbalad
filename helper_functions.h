@@ -2,8 +2,10 @@
 #define HELPER_FUNCTIONS_H
 #include <string>
 #include <sstream>
+#include <cmath>
 #include <map>
 #include <set>
+#include <regex>
 #include "data.h"
 using namespace std;
 
@@ -66,5 +68,23 @@ bool validParameterNumber(command& cmd) {;
         return false;
     }
     return true;
+}
+
+// check if the input contains a mathematical expression
+bool isMathExpression(const string& input) {
+    regex mathPattern("\\s*\\d+\\s*[\\+\\-\\*/]\\s*\\d+\\s*");
+    return regex_match(input, mathPattern);
+}
+
+vector<string> split(const string& str, char delimiter) {
+    vector<string> tokens;
+    stringstream ss(str);
+    string token;
+    
+    while (getline(ss, token, delimiter)) {
+        tokens.push_back(token);
+    }
+    
+    return tokens;
 }
 #endif //HELPER_FUNCTIONS_H
