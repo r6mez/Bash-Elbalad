@@ -41,6 +41,7 @@ public:
     inline static const std::string blue = "\033[34m";
     inline static const std::string magenta = "\033[35m";
     inline static const std::string cyan = "\033[36m";
+    inline static const std::string orange = "\033[38;5;214m";
 };
 
 

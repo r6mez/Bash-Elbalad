@@ -1,23 +1,17 @@
 - Command List
-
-1. clear         - Clears the terminal screen
-2. pwd           - Prints current working directory
-3. cd [dir]      - Changes the directory (default to Home/Desktop)
-4. ls [-l]       - Lists files (long format with -l)
-5. stat [file]   - Displays file/directory information
-6. touch [file]  - Creates/updates an empty file
-7. cat [file] | cat [file] > [output] - Displays file contents / Redirects file contents to another file
-8. rm [-f] [file]- Removes file/directory (force with -f)
-9. mv [src] [dst]- Moves/renames file/directory
-10. cp [src] [dst]- Copies file/directory
-11. mkdir [-p] [dir] - Creates directory (-p to create parent dirs)
-12. rmdir [dir]   - Removes an empty directory
-13. find [dir] [criteria] - Searches files in a directory
-14. exit          - Exits the shell
-15. help          - print shell Documentation
-
-- Options
-
-- [-l]: List in long format (for `ls`)
-- [-f]: Force delete (for `rm`)
-- [-p]: Create parent directories (for `mkdir`)
+clear                    - Clears the terminal screen
+pwd                      - Prints current working directory
+cd     [dir]             - Changes the directory (default to Home/Desktop)
+ls     [-l]              - Lists files (long format with -l)
+stat   [file]            - Displays file/directory information
+touch  [file]            - Creates/updates an empty file
+rm     [-f]  [file]      - Removes file/directory (force with -f)
+mv     [src] [dst]       - Moves/renames file/directory
+cp     [src] [dst]       - Copies file/directory
+mkdir  [-p]  [dir]       - Creates directory (-p to create parent dirs)
+rmdir  [dir]             - Removes an empty directory
+find   [dir] [name]      - Searches files in a directory
+exit                     - Exits the shell
+help                     - print shell Documentation
+cat    [file]            - Displays file contents 
+cat    [file] > [file]   - Redirects file contents to another file
