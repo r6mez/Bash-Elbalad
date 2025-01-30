@@ -5,6 +5,7 @@ Now finally, we can fight using owr own commands along **El-7ag Ebrahim Semple**
 
 **Bash-Elbalad** is a simple Linux shell project designed to mimic basic shell functionalities, aiming to provide a hands-on experience with core Linux shell operations, command execution, file management, and advanced features like piping and redirection.
 
+![image](test.png)
 
 ## 🤝 Collaboration
 
