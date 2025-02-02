@@ -27,7 +27,7 @@ Clone the repo, compile, and let the shell magic begin:
 ```bash
 # Clone the repository
 git clone https://github.com/r6mez/Bash-Elbalad.git
-cd Shell-Elbalad
+cd Bash-Elbalad
 
 # Create a build directory and compile using CMake
 mkdir build
